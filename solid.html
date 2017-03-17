@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  RED.nodes.registerType('solid-upload',{
+      category: 'function',
+      color: '#a6bbcf',
+      outputs: 1,
+      inputs: 1,
+      defaults:{
+        target: {value:"", required: true}
+      },
+      label: "solid-upload"
+  });
+</script>
+
+<script type="text/x-red" data-template-name="solid-upload">
+  <div class="form-row">
+    <label for="node-input-target"><i class="icon-tag"></i> Destination</label>
+    <input type="text" id="node-input-target" placeholder="Destination Url">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="solid-upload">
+    <p>A simple node that converts the message payloads into all lower-case characters</p>
+</script>
