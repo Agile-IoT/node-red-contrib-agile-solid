@@ -22,7 +22,7 @@ module.exports = {
     })
   },
 
-  initWithData: (data, url, credentials, node, delegate, delegator) => {
+  initWithData: (data, url, credentials, delegate, delegator) => {
     const body = rdf.rdfFileBoilerplate(data, url)
     request({
       method: "PUT",
