@@ -5,16 +5,31 @@
       outputs: 1,
       inputs: 1,
       defaults:{
-        target: {value:"", required: true}
+        url: {value:"", required: true},
+        delegate: {value: "1"},
+        delegator: {value: "", disabled: "1"}
       },
-      label: "solid-upload"
+      label: "solid-upload",
+      oneditprepare: function() {
+        var form = this
+        // TODO
+        if (!form.delegate) {
+          $("#node-config-input-delegator").prop('disabled', true);
+        }
+      }
   });
 </script>
 
 <script type="text/x-red" data-template-name="solid-upload">
   <div class="form-row">
-    <label for="node-input-target"><i class="icon-tag"></i> Destination</label>
-    <input type="text" id="node-input-target" placeholder="Destination Url">
+    <label for="node-input-url"> Destination</label>
+    <input type="text" id="node-input-url" placeholder="Destination Url">
+
+    <label for="node-input-delegate"> Act as delegate </label>
+    <input type="checkbox" "1" id="node-input-delegate", placeholder="delegate">
+
+    <label for="node-input-delegator"> On behalf of </label>
+    <input type="text" id="node-input-delegator" placeholder="Boss">
   </div>
 </script>
 

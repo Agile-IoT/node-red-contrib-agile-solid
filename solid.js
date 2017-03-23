@@ -4,16 +4,18 @@ const http = require('./helpers/http.js')
 module.exports = function(RED) {
   function SolidExport(config) {
     RED.nodes.createNode(this, config)
-    const url = config.target
+    const { url, delegate, delegator } = config
+
     const node = this
     const credentials = util.getCredentials()
 
+  
     this.on('input', (msg) => {
-      http.checkIfExists(url, credentials).then(exists => {
+      http.checkIfExists(url, credentials, delegate, delegator).then(exists => {
         if (exists) {
-          http.appendData(msg, url, credentials)
+          http.appendData(msg, url, credentials, delegate, delegator)
         } else {
-          http.initWithData(msg, url, credentials)
+          http.initWithData(msg, url, credentials, delegate, delegator)
         }
       })
     })

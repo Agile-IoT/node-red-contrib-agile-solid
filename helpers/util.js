@@ -3,7 +3,8 @@ const fs = require('fs')
 module.exports = {
   // @TODO These will have to come from the IDM.
   getCredentials: () => {
-    const path = '/home/fuchs/.node-red/nodes/'
+    // const path = '//fuchs/.node-red/nodes/'
+    const path = '/tmp/'
     let credentials = {}
 
     try {
