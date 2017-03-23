@@ -5,7 +5,6 @@ module.exports = function(RED) {
   function SolidExport(config) {
     RED.nodes.createNode(this, config)
     const { url, delegate, delegator } = config
-
     const node = this
     const credentials = util.getCredentials()
 
@@ -15,6 +14,7 @@ module.exports = function(RED) {
         if (exists) {
           http.appendData(msg, url, credentials, delegate, delegator)
         } else {
+          http.addSinkToIndex(credentials, url)
           http.initWithData(msg, url, credentials, delegate, delegator)
         }
       })

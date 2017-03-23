@@ -35,5 +35,14 @@ module.exports = {
     g.add($rdf.sym(`${url}${data.lastUpdated}`), SSN('observationTime'), $rdf.lit(data.lastUpdated))
 
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
+  },
+
+  addSinkQuery: (webId, sink) => {
+    const NIC = $rdf.Namespace('http://www.w3.org/ns/pim/space#')
+
+    const g = $rdf.graph() 
+    g.add($rdf.sym(webId), NIC('storage'), $rdf.sym(sink))
+
+    return $rdf.serialize(undefined, g, undefined, 'text/turtle')
   }
 }

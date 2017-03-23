@@ -16,13 +16,13 @@ module.exports = {
       }
 
       return request(options, (err, res) => {
-        if (err) resolve(false)
-        resolve(res.statusCode === 200)
+        if (err) return resolve(false)
+        return resolve(res.statusCode === 200)
       })
     })
   },
 
-  initWithData: (data, url, credentials, node, delegate, delegator) => {
+  initWithData: (data, url, credentials, delegate, delegator) => {
     const body = rdf.rdfFileBoilerplate(data, url)
     request({
       method: "PUT",
@@ -33,6 +33,21 @@ module.exports = {
       headers: delegate ? {
         'on-behalf-of': delegator
       } : {}
+    })
+  },
+
+  addSinkToIndex: (credentials, url) => {
+    const fullGwWebId = `https://${credentials.webId}/profile/card#me`
+    const query = rdf.addSinkQuery(fullGwWebId, url)
+    request({
+      method: "PATCH",
+      url: fullGwWebId,
+      body: `INSERT DATA { ${query} };`,
+      cert: credentials.certFile,
+      key: credentials.keyFile,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      }
     })
   },
 
