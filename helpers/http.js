@@ -8,8 +8,8 @@ module.exports = {
       const options = {
         method: 'HEAD',
         url: url,
-        cert: credentials.certFile,
-        key: credentials.keyFile,
+        cert: credentials.cert,
+        key: credentials.key,
         headers: delegate ? {
           'on-behalf-of': delegator
         } : {}
@@ -28,23 +28,25 @@ module.exports = {
       method: "PUT",
       url: url,
       body: body,
-      cert: credentials.certFile,
-      key: credentials.keyFile,
+      cert: credentials.cert,
+      key: credentials.key,
       headers: delegate ? {
         'on-behalf-of': delegator
       } : {}
+    }, (err, res) => {
     })
   },
 
   addSinkToIndex: (credentials, url) => {
-    const fullGwWebId = `https://${credentials.webId}/profile/card#me`
+    const fullGwWebId = `https://${credentials.gwWebId}/profile/card#me`
+    console.log(fullGwWebId)
     const query = rdf.addSinkQuery(fullGwWebId, url)
     request({
       method: "PATCH",
       url: fullGwWebId,
       body: `INSERT DATA { ${query} };`,
-      cert: credentials.certFile,
-      key: credentials.keyFile,
+      cert: credentials.cert,
+      key: credentials.key,
       headers: {
         'Content-Type': 'application/sparql-update'
       }
@@ -57,8 +59,8 @@ module.exports = {
       method: "PATCH",
       url: url,
       body: `INSERT DATA { ${query} };`,
-      cert: credentials.certFile,
-      key: credentials.keyFile,
+      cert: credentials.cert,
+      key: credentials.key,
       headers: delegate ? {
         'on-behalf-of': delegator,
         'Content-Type': 'application/sparql-update'
