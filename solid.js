@@ -22,7 +22,8 @@ module.exports = function(RED) {
           http.appendData(msg, url, credentials, delegate, delegator)
         } else {
           http.addSinkToIndex(credentials, url)
-          http.initWithData(msg, url, credentials, delegate, delegator)
+          http.initAcl(url, credentials, delegate, delegator)
+          .then(http.initWithData(msg, url, credentials, delegate, delegator))
         }
       })
     })

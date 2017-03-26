@@ -4,8 +4,24 @@ const RDF = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 const SSN = $rdf.Namespace('http://purl.oclc.org/net/ssnx/ssn#')
 const FOAF = $rdf.Namespace('http://xmlns.com/foaf/0.1/')
 const DC = $rdf.Namespace('http://purl.org/dc/terms/')
+const ACL = $rdf.Namespace('http://www.w3.org/ns/auth/acl#')
 
 module.exports = {
+  aclFileBoilerplate: (url, delegator) => {
+    const g = $rdf.graph() 
+    const aclUrl = $rdf.sym(`${url}.acl#owner`)
+
+    g.add(aclUrl, RDF('type'), ACL('Authorization'));
+    g.add(aclUrl, ACL('accessTo'), $rdf.sym(url));
+    g.add(aclUrl, ACL('agent'), $rdf.sym(delegator));
+
+    g.add(aclUrl, ACL('mode'), ACL('Read'));
+    g.add(aclUrl, ACL('mode'), ACL('Write'));
+    g.add(aclUrl, ACL('mode'), ACL('Control'));
+    
+    return $rdf.serialize(undefined, g, undefined, 'text/turtle')
+  },
+
   wrapInRdf: (data, url) => {
     const g = $rdf.graph() 
     const sensorUri = url + '#sensor'

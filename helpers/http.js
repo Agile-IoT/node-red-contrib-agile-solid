@@ -22,6 +22,27 @@ module.exports = {
     })
   },
 
+  initAcl: (url, credentials, delegate, delegator) => {
+    return new Promise((resolve, reject) => {
+      const body = rdf.aclFileBoilerplate(url, delegator)
+      request({
+        method: "PUT",
+        url: `${url}.acl`,
+        body: body,
+        cert: credentials.cert,
+        key: credentials.key,
+        headers: delegate ? {
+          'on-behalf-of': delegator
+        } : {}
+      }, (err, res) => {
+        if(err) {
+          return reject() 
+        }
+        return resolve()
+      })
+    })
+  },
+
   initWithData: (data, url, credentials, delegate, delegator) => {
     const body = rdf.rdfFileBoilerplate(data, url)
     request({
