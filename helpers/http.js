@@ -8,16 +8,37 @@ module.exports = {
       const options = {
         method: 'HEAD',
         url: url,
-        cert: credentials.certFile,
-        key: credentials.keyFile,
+        cert: credentials.cert,
+        key: credentials.key,
         headers: delegate ? {
           'on-behalf-of': delegator
         } : {}
       }
 
       return request(options, (err, res) => {
-        if (err) resolve(false)
-        resolve(res.statusCode === 200)
+        if (err) return resolve(false)
+        return resolve(res.statusCode === 200)
+      })
+    })
+  },
+
+  initAcl: (url, credentials, delegate, delegator) => {
+    return new Promise((resolve, reject) => {
+      const body = rdf.aclFileBoilerplate(url, delegator)
+      request({
+        method: "PUT",
+        url: `${url}.acl`,
+        body: body,
+        cert: credentials.cert,
+        key: credentials.key,
+        headers: delegate ? {
+          'on-behalf-of': delegator
+        } : {}
+      }, (err, res) => {
+        if(err) {
+          return reject() 
+        }
+        return resolve()
       })
     })
   },
@@ -28,11 +49,28 @@ module.exports = {
       method: "PUT",
       url: url,
       body: body,
-      cert: credentials.certFile,
-      key: credentials.keyFile,
+      cert: credentials.cert,
+      key: credentials.key,
       headers: delegate ? {
         'on-behalf-of': delegator
       } : {}
+    }, (err, res) => {
+    })
+  },
+
+  addSinkToIndex: (credentials, url) => {
+    const fullGwWebId = `https://${credentials.gwWebId}/profile/card#me`
+    console.log(fullGwWebId)
+    const query = rdf.addSinkQuery(fullGwWebId, url)
+    request({
+      method: "PATCH",
+      url: fullGwWebId,
+      body: `INSERT DATA { ${query} };`,
+      cert: credentials.cert,
+      key: credentials.key,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      }
     })
   },
 
@@ -42,8 +80,8 @@ module.exports = {
       method: "PATCH",
       url: url,
       body: `INSERT DATA { ${query} };`,
-      cert: credentials.certFile,
-      key: credentials.keyFile,
+      cert: credentials.cert,
+      key: credentials.key,
       headers: delegate ? {
         'on-behalf-of': delegator,
         'Content-Type': 'application/sparql-update'
