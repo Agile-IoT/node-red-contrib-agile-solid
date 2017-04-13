@@ -22,15 +22,20 @@ module.exports = {
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
   },
 
+  /*
+   * data is expected to be a RecordObject
+   * see http://agile-iot.github.io/agile-api-spec/docs/html/api.html#RecordObject
+   *
+   */
   wrapInRdf: (data, url) => {
     const g = $rdf.graph() 
     const sensorUri = url + '#sensor'
-    const observationUrl = `${url}#${data.lastUpdated}`
+    const observationUrl = `${url}#${data.LastUpdated}`
 
     g.add($rdf.sym(sensorUri), SSN('madeObservation'), $rdf.sym(observationUrl)) 
     g.add($rdf.sym(observationUrl), RDF('type'), SSN('Observation')) 
-    g.add($rdf.sym(observationUrl), SSN('observationResult'), $rdf.lit(data.value)) 
-    g.add($rdf.sym(observationUrl), SSN('observationTime'), $rdf.lit(data.lastUpdated)) 
+    g.add($rdf.sym(observationUrl), SSN('observationResult'), $rdf.lit(data.Value)) 
+    g.add($rdf.sym(observationUrl), SSN('observationTime'), $rdf.lit(data.LastUpdated)) 
 
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
   },
@@ -44,11 +49,11 @@ module.exports = {
     g.add($rdf.sym(url), FOAF('primaryTopic'), $rdf.sym(sensorUri))
 
     g.add($rdf.sym(sensorUri), RDF('type'), SSN('Sensor'))
-    g.add($rdf.sym(sensorUri), SSN('observes'), $rdf.lit('Temp in C'))
+    g.add($rdf.sym(sensorUri), SSN('observes'), $rdf.lit(data.Unit))
 
-    g.add($rdf.sym(`${url}${data.lastUpdated}`), RDF('type'), SSN('Observation'))
-    g.add($rdf.sym(`${url}${data.lastUpdated}`), SSN('observationResult'), $rdf.lit(data.value))
-    g.add($rdf.sym(`${url}${data.lastUpdated}`), SSN('observationTime'), $rdf.lit(data.lastUpdated))
+    g.add($rdf.sym(`${url}${data.LastUpdated}`), RDF('type'), SSN('Observation'))
+    g.add($rdf.sym(`${url}${data.LastUpdated}`), SSN('observationResult'), $rdf.lit(data.Value))
+    g.add($rdf.sym(`${url}${data.LastUpdated}`), SSN('observationTime'), $rdf.lit(data.LastUpdated))
 
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
   },
