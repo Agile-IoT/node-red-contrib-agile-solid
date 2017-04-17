@@ -31,7 +31,6 @@ module.exports = {
     const g = $rdf.graph() 
     const sensorUri = url + '#sensor'
     const observationUrl = `${url}#${data.LastUpdated}`
-
     g.add($rdf.sym(sensorUri), SSN('madeObservation'), $rdf.sym(observationUrl)) 
     g.add($rdf.sym(observationUrl), RDF('type'), SSN('Observation')) 
     g.add($rdf.sym(observationUrl), SSN('observationResult'), $rdf.lit(data.Value)) 

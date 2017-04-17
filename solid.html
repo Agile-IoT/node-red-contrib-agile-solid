@@ -5,18 +5,10 @@
       outputs: 1,
       inputs: 1,
       defaults:{
-        url: {value:"https://google.com", required: true},
-        delegate: {value: "1"},
-        delegator: {value: "https://google.com", disabled: "1"}
+        url: {value:"", required: true},
+        delegator: {value: ""}
       },
       label: "solid-upload",
-      oneditprepare: function() {
-        var form = this
-        // TODO
-        if (!form.delegate) {
-          $("#node-config-input-delegator").prop('disabled', true);
-        }
-      }
   });
 </script>
 
@@ -24,9 +16,6 @@
   <div class="form-row">
     <label for="node-input-url"> Destination</label>
     <input type="text" id="node-input-url" placeholder="Destination Url">
-
-    <label for="node-input-delegate"> Act as delegate </label>
-    <input type="checkbox" "1" id="node-input-delegate", placeholder="delegate">
 
     <label for="node-input-delegator"> On behalf of </label>
     <input type="text" id="node-input-delegator" placeholder="Boss">

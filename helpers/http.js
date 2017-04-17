@@ -3,16 +3,16 @@ const rdf = require('./rdf.js')
 
 module.exports = {
 
-  checkIfExists: (url, credentials, delegate, delegator) => {
+  checkIfExists: (url, credentials, delegator) => {
     return new Promise((resolve, reject) => {
       const options = {
         method: 'HEAD',
         url: url,
         cert: credentials.cert,
         key: credentials.key,
-        headers: delegate ? {
+        headers: {
           'on-behalf-of': delegator
-        } : {}
+        }
       }
 
       return request(options, (err, res) => {
@@ -22,7 +22,7 @@ module.exports = {
     })
   },
 
-  initAcl: (url, credentials, delegate, delegator) => {
+  initAcl: (url, credentials, delegator) => {
     return new Promise((resolve, reject) => {
       const body = rdf.aclFileBoilerplate(url, delegator)
       request({
@@ -31,9 +31,9 @@ module.exports = {
         body: body,
         cert: credentials.cert,
         key: credentials.key,
-        headers: delegate ? {
+        headers: {
           'on-behalf-of': delegator
-        } : {}
+        }
       }, (err, res) => {
         if(err) {
           return reject() 
@@ -43,7 +43,7 @@ module.exports = {
     })
   },
 
-  initWithData: (data, url, credentials, delegate, delegator) => {
+  initWithData: (data, url, credentials, delegator) => {
     const body = rdf.rdfFileBoilerplate(data, url)
     request({
       method: "PUT",
@@ -51,16 +51,15 @@ module.exports = {
       body: body,
       cert: credentials.cert,
       key: credentials.key,
-      headers: delegate ? {
+      headers: {
         'on-behalf-of': delegator
-      } : {}
+      }
     }, (err, res) => {
     })
   },
 
   addSinkToIndex: (credentials, url) => {
     const fullGwWebId = `https://${credentials.gwWebId}/profile/card#me`
-    console.log(fullGwWebId)
     const query = rdf.addSinkQuery(fullGwWebId, url)
     request({
       method: "PATCH",
@@ -74,7 +73,7 @@ module.exports = {
     })
   },
 
-  appendData: (data, url, credentials, delegate, delegator) => {
+  appendData: (data, url, credentials, delegator) => {
     const query = rdf.wrapInRdf(data, url)
     request({
       method: "PATCH",
@@ -82,10 +81,8 @@ module.exports = {
       body: `INSERT DATA { ${query} };`,
       cert: credentials.cert,
       key: credentials.key,
-      headers: delegate ? {
+      headers: {
         'on-behalf-of': delegator,
-        'Content-Type': 'application/sparql-update'
-      } : {
         'Content-Type': 'application/sparql-update'
       }
     })
