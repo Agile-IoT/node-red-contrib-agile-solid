@@ -6,26 +6,27 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 module.exports = function(RED) {
   function SolidExport(config) {
     RED.nodes.createNode(this, config)
+
     const { url, delegator } = config
     const node = this
     let credentials
 
     idm.getCredentials().then(creds => {
       credentials = creds
+    }).catch(e => {
+      node.error(e) 
     })
   
     this.on('input', (msg) => {
-      if (!credentials || !url || !delegator) {
+      if (!credentials || !url || !delegator)
         return 
-      }
 
       http.checkIfExists(url, credentials, delegator).then(exists => {
         if (exists) {
-          http.appendData(msg, url, credentials, delegator)
+          http.appendData(msg.payload, url, credentials, delegator)
         } else {
-          http.addSinkToIndex(credentials, url)
           http.initAcl(url, credentials, delegator)
-          .then(http.initWithData(msg, url, credentials, delegator))
+          .then(http.initWithData(msg.payload, url, credentials, delegator))
         }
       })
     })

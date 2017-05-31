@@ -16,7 +16,8 @@ module.exports = {
       }
 
       return request(options, (err, res) => {
-        if (err) return resolve(false)
+        if (err)
+          return resolve(false)
         return resolve(res.statusCode === 200)
       })
     })
@@ -35,9 +36,9 @@ module.exports = {
           'on-behalf-of': delegator
         }
       }, (err, res) => {
-        if(err) {
+        if(err || res.statusCode !== 200)
           return reject() 
-        }
+
         return resolve()
       })
     })
@@ -54,22 +55,9 @@ module.exports = {
       headers: {
         'on-behalf-of': delegator
       }
-    }, (err, res) => {
-    })
-  },
-
-  addSinkToIndex: (credentials, url) => {
-    const fullGwWebId = `https://${credentials.gwWebId}/profile/card#me`
-    const query = rdf.addSinkQuery(fullGwWebId, url)
-    request({
-      method: "PATCH",
-      url: fullGwWebId,
-      body: `INSERT DATA { ${query} };`,
-      cert: credentials.cert,
-      key: credentials.key,
-      headers: {
-        'Content-Type': 'application/sparql-update'
-      }
+    }, (error, response) => {
+      if (error || response.statusCode !==  200)
+        console.error(response.statusCode)
     })
   },
 
@@ -85,6 +73,11 @@ module.exports = {
         'on-behalf-of': delegator,
         'Content-Type': 'application/sparql-update'
       }
+    }, (error, response) => {
+      if (error || response.statusCode !== 200)
+        console.error(response.statusCode)
+    }).on('error', e => {
+      console.error(e)
     })
   }
 }

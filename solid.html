@@ -6,7 +6,7 @@
       inputs: 1,
       defaults:{
         url: {value:"", required: true},
-        delegator: {value: ""}
+        delegator: {value: "", required: true}
       },
       label: "solid-upload",
   });
@@ -18,10 +18,19 @@
     <input type="text" id="node-input-url" placeholder="Destination Url">
 
     <label for="node-input-delegator"> On behalf of </label>
-    <input type="text" id="node-input-delegator" placeholder="Boss">
+    <input type="text" id="node-input-delegator" placeholder="Delegator">
   </div>
 </script>
 
 <script type="text/x-red" data-help-name="solid-upload">
-    <p>A simple node that converts the message payloads into all lower-case characters</p>
+    <p>A node for uploading sensor data to a Solid server. The node takes a recordOject as input. WebID delegation is used to post data to a server on behalf of the server's owner. The AGILE gateway needs to be provisioned with it's personal WebID, and the client certificate needs to be added to the IDM.
+      <p>Configuration:</p>
+      <ul>
+      <li><code>Destination Url</code> - The location where the data will be stored.
+      <li><code>Delegator</code> - The WebId of the person the AGILE gateway is delegating for.
+    </p> </br>
+
+    <p>More information on the Solid specification can be found <a href="https://github.com/solid/solid-spec">here</a></p>
 </script>
+
+

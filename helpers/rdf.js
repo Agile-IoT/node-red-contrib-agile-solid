@@ -25,8 +25,8 @@ module.exports = {
   /*
    * data is expected to be a RecordObject
    * see http://agile-iot.github.io/agile-api-spec/docs/html/api.html#RecordObject
-   *
    */
+
   wrapInRdf: (data, url) => {
     const g = $rdf.graph() 
     const sensorUri = url + '#sensor'
@@ -55,8 +55,9 @@ module.exports = {
     g.add($rdf.sym(`${url}${data.LastUpdated}`), SSN('observationTime'), $rdf.lit(data.LastUpdated))
 
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
-  },
+  }
 
+  /*
   addSinkQuery: (webId, sink) => {
     const NIC = $rdf.Namespace('http://www.w3.org/ns/pim/space#')
 
@@ -65,4 +66,5 @@ module.exports = {
 
     return $rdf.serialize(undefined, g, undefined, 'text/turtle')
   }
+  */
 }
