@@ -23,13 +23,24 @@ module.exports = function(RED) {
 
       http.checkIfExists(url, credentials, delegator).then(exists => {
         if (exists) {
+          node.status({fill:"yellow",shape:"dot",text:"appending data"})
           http.appendData(msg.payload, url, credentials, delegator)
+          .then(node.status({fill:"green",shape:"dot",text:"data appended"}))
+          .catch(node.status({fill:"red",shape:"dot",text:"appending the data failed"}))
         } else {
-          http.initAcl(url, credentials, delegator)
-          .then(http.initWithData(msg.payload, url, credentials, delegator))
+          node.status({fill:"yellow",shape:"dot",text:"creating destination file"});
+
+          http.initAcl(url, credentials, delegator).then(() => {
+            http.initWithData(msg.payload, url, credentials, delegator).then(() => {
+              node.status({fill:"green",shape:"dot",text:"created"});
+            })
+          }).catch(e => {
+            node.status({fill:"red",shape:"dot",text:"failed to create the destination file"});
+          })
         }
       })
     })
   }
+
   RED.nodes.registerType('solid-upload',SolidExport);
 }
