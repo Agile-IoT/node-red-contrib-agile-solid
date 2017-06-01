@@ -42,7 +42,7 @@ module.exports = {
           return reject() 
 
         return resolve()
-      }).on('error' e => reject)
+      }).on('error', e => reject)
     })
   },
 
