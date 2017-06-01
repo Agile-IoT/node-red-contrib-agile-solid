@@ -15,10 +15,10 @@ module.exports = {
         }
       }
 
-      return request(options, (error, resolve) => {
+      return request(options, (error, response) => {
         if (error)
           return resolve(false)
-        return resolve(res.statusCode === 200)
+        return resolve(response.statusCode === 200)
       }).on('error', e => reject)
     })
   },
@@ -37,9 +37,9 @@ module.exports = {
         }
       }
 
-      request(options, (err, res) => {
-        if(err || res.statusCode !== 200)
-          return reject() 
+      request(options, (error, response) => {
+        if(error || response.statusCode !== 201)
+          return reject(error || response.statusCode) 
 
         return resolve()
       }).on('error', e => reject)
@@ -61,8 +61,8 @@ module.exports = {
       }
 
       request(options, (error, response) => {
-        if (error || response.statusCode !==  200)
-          return reject(response.statusCode)
+        if (error || response.statusCode !==  201)
+          return reject(error || response.statusCode)
 
         return resolve()
       }).on('error', e => reject)
@@ -84,7 +84,7 @@ module.exports = {
         }
       }, (error, response) => {
         if (error || response.statusCode !== 200)
-          return reject()
+          return reject(error || response.statusCode)
 
         return resolve()
       }).on('error', e => reject)

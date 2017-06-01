@@ -13,7 +13,8 @@ module.exports = {
 
     g.add(aclUrl, RDF('type'), ACL('Authorization'));
     g.add(aclUrl, ACL('accessTo'), $rdf.sym(url));
-    g.add(aclUrl, ACL('agent'), $rdf.sym(delegator));
+    // g.add(aclUrl, ACL('agent'), $rdf.sym(delegator));
+    g.add(aclUrl, ACL('agentClass'), FOAF('Agent'));
 
     g.add(aclUrl, ACL('mode'), ACL('Read'));
     g.add(aclUrl, ACL('mode'), ACL('Write'));
